@@ -1,0 +1,66 @@
+#!/bin/bash -eu
+
+DIR=$(cd `dirname ${BASH_SOURCE}` > /dev/null && pwd)
+
+function install_open_jdk {
+    # sudo yum remove --quiet --assumeyes java-1.7.0-openjdk > /dev/null
+
+    sudo yum install --assumeyes java-1.8.0-openjdk > /dev/null
+}
+
+function install_lein {
+    # Remove older version of Leiningen
+    if [ -f $DIR/tools/lein-2.6.1/lein ]
+    then
+       rm -rf $DIR/tools/lein-2.6.1
+    fi
+
+    if [ ! -f $LEIN_ROOT/lein ]
+    then
+        curl --create-dirs --output $LEIN_ROOT/lein https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+        chmod 755 $LEIN_ROOT/lein
+    fi
+}
+
+function install_ansible {
+    sudo yum install -y ansible
+}
+
+install_sass() {
+    mkdir -p $LOCAL_GEMS
+    mkdir -p $LOCAL_GEMS_BIN
+
+    if ls $LOCAL_GEMS/gems/sass-3.2.8 &> /dev/null;
+    then
+        echo "Sass already installed"
+    else
+        sudo yum install --assumeyes ruby rubygems > /dev/null
+        /usr/bin/gem install sass --version '=3.2.8' --no-rdoc --no-ri --bindir $LOCAL_GEMS_BIN --install-dir $LOCAL_GEMS
+    fi
+}
+
+
+LEIN_ROOT=$DIR/tools/lein
+LOCAL_GEMS=$DIR/tools/ruby
+LOCAL_GEMS_BIN=${LOCAL_GEMS}/bin
+export GEM_HOME=$LOCAL_GEMS
+
+echo "Installing java";
+install_open_jdk
+echo "Installing lein";
+install_lein
+echo "Installing sass";
+install_sass
+
+export PATH=$LOCAL_GEMS_BIN:$LEIN_ROOT:$PATH
+
+
+if [ -f ./devenv.local ]; then
+   . ./devenv.local
+
+fi
+
+
+export LANG="en_US.UTF-8"
+export LANGUAGE="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"

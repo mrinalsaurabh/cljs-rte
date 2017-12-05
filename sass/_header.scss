@@ -1,0 +1,178 @@
+.cljs-header {
+    #menu-background {
+	top: 56px;
+	z-index: 99;
+    }
+    .title-bar {
+	display: flex;
+	background: $header-bg;
+	min-height: 56px;
+	.glyph-sprite{
+	    background: url(../images/nav-sprite.png) no-repeat  center 0px;
+	}
+	.nav-menu{
+	    &:after{
+		content:'';
+		background: url(/images/nav-sprite.png) no-repeat  center 0px;
+		display:inline;
+		height:1px;
+		width:1px;
+	    }
+	}
+	.nav-menu-btn{
+	    cursor: pointer;
+	    cursor: hand;
+	    background: url(../images/primary_navigation_57x57.svg) no-repeat center 0px;
+	    width: 57px;
+	    height: 57px;
+	    justify-content: center;
+	    position: relative;
+	}
+
+	.nav-menu-btn-click{
+	    background: url(../images/primary_navigation_57x57_selected.svg) no-repeat center 0px;
+	    width: 57px;
+	    height: 57px;
+	    float: left;
+	}
+
+	.app-title {
+	    font-size: 24px;
+	    display: flex;
+	    line-height: 1;
+	    align-items: center;
+	    margin: 0 20px 0 20px;
+	    a {
+		color: #000;
+		text-decoration: none;
+		outline: none;
+		font-weight: 800;
+		font-size: 25px;
+		letter-spacing: -1.3px;
+	    }
+	}
+
+	.page-title {
+	    font-size: 20px;
+	    display: flex;
+	    align-items: center;
+	}
+
+	.feedback {
+	    display: flex;
+	    align-items: center;
+	    flex: 0 1 auto;
+	    margin-left: auto;
+	    a {
+		font-size: 15px;
+		margin-right: 20px;
+		color: #444444;
+		text-decoration: none;
+		font-weight: 400px;
+		display: inline-block;
+	    }
+	}
+    }
+    .menu-list-container {
+	text-align:center;
+	background:#fff;
+	position: absolute;
+	right: 10px;
+	left: 0;
+	top:56px;
+	width: 240px;
+	z-index:100;
+	border-top:1px solid #ececec;
+	@extend %clearfix;
+	@media (min-width: $bp-small){
+	    right:auto;
+	}
+    ul {
+	margin: 0;
+	padding: 0;
+
+	li{
+	    position:relative;
+	    float:left;
+	    width:120px;
+	    height:117px;
+	    text-align:center;
+	    border-left:1px solid #ececec;
+	    border-right:1px solid #ececec;
+	    border-bottom:1px solid #ececec;
+	    margin:0px;
+	    list-style:none;
+	    &:nth-child(even){
+		border-left:none;
+	    }
+	    a{
+		display: inline-block;
+		font-size: 12px;
+		line-height: 14px;
+		width: 100%;
+		padding: 78px 5px 10px 5px;
+		text-decoration: none;
+		color: #4d4d4d;
+		outline: none;
+		.menu-pipeline {
+		    margin: -78px -10px -10px -10px;
+		    width:120px;
+		    height:117px;
+		    padding-top: 45px;
+		}
+
+		&:visited,&:active,&:hover{
+				       color:#4d4d4d;
+				   }
+
+		&.nav-revenue{
+		    background-position: 40px 41px !important;
+		}
+		&.nav-gap {
+		    background-position: -1575px 41px !important;
+		}
+		&.nav-utilisation{
+		    background-position: -83px 41px !important;
+		}
+		&.nav-invoices{
+		    background-position: -209px 41px !important;
+		}
+		&.nav-cashbalance{
+		    background-position: -329px 41px !important;
+		}
+		&.nav-cgm{
+		    background-position: -1330px 41px !important;
+		}
+		&.nav-home{
+		    background-position: -451px 41px !important;
+		}
+		&.nav-headcount{
+		    background-position: -332px 43px !important;
+		}
+		&.nav-signout{
+		    background-position: -580px 43px !important;
+		}
+		&.nav-sales-funnel{
+		    background-position: -714px 42px !important;
+		}
+		&.nav-dashboard-revenue{
+		    background-position: -842px 42px !important;
+		}
+		&.nav-dashboard-home {
+		    background-position: -954px 42px !important;
+		}
+		&.nav-dashboard-invoices {
+		    background-position: -1068px 42px !important;
+		}
+		&.nav-sales-pipeline {
+		    background-position: -1197px 42px !important;
+		}
+	    }
+	    &:not(:last-child):hover{
+		background:#F4F4F4;
+	    }
+
+	}
+    }
+    }
+}

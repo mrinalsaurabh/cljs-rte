@@ -1,0 +1,134 @@
+//header
+$header-bg : #7cced4;
+$tile-bg   : #f0f0f0;
+
+//tiles
+$bad       : #f0ba95;
+$good      : #00a85c;
+$warning   : #ffb500;
+$tile-bg   : #f0f0f0;
+$details-border : #d6d6d6;
+
+// revenue
+$active-button-color : #69c7ce;
+$active-button-border-color : #42b8c1;
+$tab-color   : #292929;
+$filter-button-color : #f2f2f2;
+$hover-filter-button-color : #7cced4;
+$selected-filter-button-color: #75cdd4;
+$atl-color      : #ea6700;
+$btl-color      : #1A73BA;
+$plan-color     : #26BDCF;
+$cash-color     : #c6c6c6;
+$unassigned-color   : #fc994a;
+$as-good-as-sold-color   : #b61f5a;
+$gdf-color      : #5e3e2a;
+$gdf-circle-color: #5E3E2A;
+$tofind-color   : #EE312D;
+$actual-color   : #11AA58;
+$shortfall-color: #9E785F;
+$atl-label-color: white;
+$btl-label-color: #000;
+$actual-label-color  : #fff;
+$chart-path-width    : 2;
+$rolling-cash-color     : #1c59ff;
+
+$atl-highlight  : #CCE7F8;
+$btl-highlight  : #EFF5F3;
+$actual-highlight : $atl-highlight;
+
+$selected-month-color : #B80F4A;
+$connector-color: #def3f4;
+
+$billable		:lighten(#f88a30,10%);
+$nonBillable	:#fecfab;
+$leave			:#b5b5b5;
+$other			:#d7ccbe;
+$beach			:#c0f9fe;
+$publicHoliday	:#f69cc6;
+$missingTimesheets	:#6E6E6E;
+$headcount      :#289C42;
+$cgm            :#6c4a35;
+$wage-monthly   :#F79BC6;
+$hidden-values : #FEE0C9;
+$utlisation-plan :#2271aa;
+$atl-assigned-utilisation-forecast: #FF6A63;
+$btl-assigned-utilisation-forecast: #FEA481;
+$atl-unassigned-utilisation-forecast: #FFD3AC;
+$btl-unassigned-utilisation-forecast: #F0BA94;
+
+$sidePanel :#090808;
+
+$bp-small : 768px;
+$bp-medium : 1024px;
+$bp-medium-gt : 1025px;
+$bp-large : 1200px;
+$bp-huge : 1440px;
+
+
+
+$dropdown-bg :#000;
+
+$treemap-level0-color: #7f8386;
+$treemap-level1-color: #25C8D8;
+$treemap-level2-color: #94D7DE;
+$treemap-level3-color: #94D7DE;
+
+$treemap-children-color: #6BC0C2;
+$treemap-children-hover-color: #7dcdd4;
+
+//cash balance
+$weekly-balance-color: grey;
+
+//grade colours
+$director: #F4A967;
+$principal: #F29E54;
+$lead: #D16A10;
+$senior: #BE600E;
+$consultant: #AB570D;
+$graduate: #984D0B;
+$intern: #85430A;
+
+//role colours
+$administrator: #113955;
+$businessanalyst: #144466;
+$businessdevelopmentmanager: #184f77;
+$salesmarketinganalyst: #BDDFF3;
+$clientprincipal: #1b5b88;
+$coordinator: #1e6596;
+$dba: #1e6596;
+$datascientist: #2271aa;
+$devops: #257dbb;
+$developer: #2888cc;
+$directorrole: #3392d7;
+$experiencedesigner: #449bda;
+$head: #55a4dd;
+$iterationmanager: #66ade1;
+$manager: #77b7e4;
+$productsupportanalyst: #88c0e7;
+$projectmanager: #99c9eb;
+$qualityassurance: #aad2ee;
+$solutionarchitect: #bbdbf2;
+$specialist: #CCE4F5;
+$technicaladministrator: #CCE4F5;
+$uideveloper: #DDEDF8;
+$informationsecurityconsultan: #7EC0EE;
+$infrastructureconsultant: #87CEFF;
+$advisory: #144364;
+
+//headcount
+$ps-headcount : #1A73BA;
+$ops-headcount : #EF5BA1;
+$ps-plan-headcount : #125B96;
+$ops-plan-headcount : #B7447B;
+
+//utilisation
+$windows95-grey: #EBEBEB;
+
+//cgm
+$cgm-revenue: #9e7860;
+
+
+//Generic
+$selected-filter: #f9dcc3;
+$selected-filter-dark: #f78f31;
