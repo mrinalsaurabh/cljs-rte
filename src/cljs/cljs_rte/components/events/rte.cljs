@@ -4,3 +4,8 @@
             [clojure.string :as str]
             [ajax.core :as ajax]))
 
+(reg-event-db
+  :rte-keypress 
+  (fn [db [_ key]]
+    (let [current-content (get-in db [:rte :rte-content])]
+    (assoc-in db [:rte :rte-content] (str current-content "<p>" key "</p>")))))

@@ -19,19 +19,3 @@
                                           -location
                                           -href))) selection)]
     choice))
-
-(defn selected-account []
-  (get-selected "sfdc-account-id"))
-
-(defn selected-account-name []
-  (get-selected "account"))
-
-(defn selected-country []
-  (get-selected "country"))
-
-(defn selected-currency []
-  (let [currency (get-selected "currency")]
-    (if (or (nil? currency)
-            (= currency ""))
-      "USD"
-      currency)))
