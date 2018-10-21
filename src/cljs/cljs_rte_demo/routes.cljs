@@ -16,6 +16,7 @@
 ;; Initialize view
 (defn init! []
   (try
+    (dispatch [:initialise-db])
     (reagent/render-component [demo/page] (.getElementById js/document "app"))
     (catch js/Error e)))
 

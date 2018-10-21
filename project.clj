@@ -39,15 +39,13 @@
   :cljs-simple-cache-buster {:cljsbuild-id ["min" "dev" "test"]
                              :fingerprint ~version
                              :template-file ["resources/public/index.html"
-                                             "sass/_chosen.scss"
-                                             "sass/_dropdown.scss"
-                                             "sass/_error.scss"
-                                             "sass/_filter.scss"]
+                                             "sass/_general.scss"
+                                             "sass/_rte.scss"
+                                             "sass/_variables.scss"]
                              :output-to ["resources/public/index.html"
-                                         "sass/_chosen.scss"
-                                         "sass/_dropdown.scss"
-                                         "sass/_error.scss"
-                                         "sass/_filter.scss"]}
+                                         "sass/_general.scss"
+                                         "sass/_rte.scss"
+                                         "sass/_variables.scss"]}
 
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
 
@@ -58,8 +56,7 @@
                    [com.cemerick/piggieback "0.2.1"]]
 
     :plugins      [[lein-figwheel "0.5.9"]
-                   [lein-doo "0.1.7"]]
-    }}
+                   [lein-doo "0.1.7"]]}}
 
   :cljsbuild
   {:builds
@@ -90,7 +87,7 @@
                     :output-dir   "resources/public/js/compiled/test/out"
                     :optimizations :none}}]}
 
-    :doo {:build "test"
-          :alias {:default [:phantom]
-                  :browsers [:phantom]
-                  :all [:browsers :headless]}})
+  :doo {:build "test"
+        :alias {:default [:phantom]
+                :browsers [:phantom]
+                :all [:browsers :headless]}})

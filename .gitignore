@@ -31,3 +31,6 @@ test/responsive/reports
 /.idea
 .DS_Store
 the-numbers.iml
+figwheel_server.log
+.vscode*
+pa

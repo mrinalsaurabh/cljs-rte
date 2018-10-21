@@ -7,6 +7,11 @@
  (fn [db]
    (:name db)))
 
+(re-frame.core/reg-sub
+ :initialised?
+ (fn  [db _]
+   (not (empty? db))))
+
 (re-frame/reg-sub
  :active-panel
  (fn [db _]

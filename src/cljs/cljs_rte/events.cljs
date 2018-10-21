@@ -5,6 +5,11 @@
             [ajax.core :as ajax]))
 
 (reg-event-db
+ :initialise-db
+ (fn [_ _]
+   {}))
+
+(reg-event-db
  :cljs-rte-bad-user-response
  (fn [db [_ data response]]
    (assoc-in db [:global :enable-error] (select-keys data [:status :uri :last-method]))))

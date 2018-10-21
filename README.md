@@ -38,7 +38,7 @@ export AWS_SECRET_ACCESS_KEY=<some_secret_key>```
 * `lein deps`
 
 **Steps to run cljs-rte-demo**
-* We need /api backend. For this purpose, run gofigure-api
+* We need /api backend. For this purpose, run api
 * `lein sass once` to create/update css files
 * `lein figwheel` in the root folder.
 

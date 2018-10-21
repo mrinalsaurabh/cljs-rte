@@ -4,5 +4,11 @@
        span {
            border: 1px solid black;
        }
-   } 
+   }
+   .display-panel {
+       .selected {
+            background: rgb(108, 207, 153);
+            border-left: 1px solid #000000;
+       }
+   }
 }

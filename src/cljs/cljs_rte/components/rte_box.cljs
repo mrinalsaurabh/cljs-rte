@@ -11,14 +11,21 @@
 
 (defn rte-component []
   (let [rand-id (util-string/rand-str 5)
-        content @(subscribe [:rte-content])]
-        (prn "content: " content)
-[:div {:class "editor"}
-                      [:div {:class "font-panel"} 
-                      [:input {:type "button" :class "text-bold" :value "B"}]
-                      [:input {:type "button" :class "text-italics" :value "I"}]]
-                      [:div {:id rand-id 
-                             :class "display-panel" 
-                             :contentEditable "true" 
-                             :on-key-press (fn [e] (dispatch [:rte-keypress (.-charCode e)]))
-                             :dangerouslySetInnerHTML {:__html content}}]]))
+        content @(subscribe [:rte-content])
+        html-content ()]
+    [:div {:class "editor"}
+     [:div {:class "font-panel"}
+      [:input {:type "button" :class "text-bold" :value "B"}]
+      [:input {:type "button" :class "text-italics" :value "I"}]]
+     [:div {:id rand-id
+            :class "display-panel"
+            :contentEditable "true"
+            :on-key-down (fn [e]
+                           (.preventDefault e)
+                           (let [key (.-key e)]
+                             (dispatch [:rte-keydown key])))
+            :on-key-up (fn [e]
+                         (.preventDefault e)
+                         (let [key (.-key e)]
+                           (dispatch [:rte-keyup key])))
+            :dangerouslySetInnerHTML {:__html content}}]]))
