@@ -12,6 +12,11 @@
      :end new-start-position
      :end-line start-line}))
 
+(defmethod update-position-on-write-conditionally "Enter" [position]
+  (let [start-line (if (:start-line position) (inc (:start-line position)) 0)
+        position 0]
+    {:start position :start-line start-line :end position :end-line start-line}))
+
 (defmulti update-position-on-right (fn [current-position line-lenghts shift-key-pressed]
                                      [shift-key-pressed (= true (:inverted current-position))]))
 

@@ -26,5 +26,9 @@
                      "</span>"
                      (subs text end-position))
                 :else  text)))]
-    (apply str (map-indexed (fn [idx curr]
-                              (str "<p>" (span-position idx (:text curr) position) "</p>")) text))))
+    (let [selected-lines (range (or (:start-line position) 0)
+                                (inc (or (:end-line position) 0)))]
+      (apply str (map-indexed (fn [idx curr]
+                                (if (some #{idx} selected-lines)
+                                  (str "<p>" (span-position idx (:text curr) position) "</p>")
+                                  (str "<p>" (:text curr) "</p>"))) text)))))

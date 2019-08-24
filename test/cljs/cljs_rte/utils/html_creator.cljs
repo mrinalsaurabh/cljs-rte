@@ -26,5 +26,12 @@
       (is (= (str "<p>a<span class='selected'>bc</span></p>"
                   "<p><span class='selected'>def</span></p>"
                   "<p><span class='selected'>gh</span>i</p>")
+             (html-creator/text-to-html text position)))))
+
+  (testing "should not select multiple lines for new line selection"
+    (let [text [{:text "abc"} {:text "def"}]
+          position {:start-line 1 :start 0 :end-line 1 :end 0}]
+      (is (= (str "<p>abc</p>"
+                  "<p><span class='selected'></span>def</p>")
              (html-creator/text-to-html text position))))))
 

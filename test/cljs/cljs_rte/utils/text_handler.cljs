@@ -65,3 +65,31 @@
               :position {:start-line 0 :start 1 :end-line 0 :end 1}
               :line-lengths [1]}
              (thd/insert-new-text-character position text character))))))
+
+(deftest test-insert-new-enter-character
+  (testing "should insert new line on a pressing an enter when selection within single line"
+    (let [text [{:text "abcdef"}]
+          position {:start-line 0 :start 3 :end-line 0 :end 3}
+          character "Enter"]
+      (is (= {:text [{:text "abc"} {:text "def"}]
+              :position {:start-line 1 :start 0 :end-line 1 :end 0}
+              :line-lengths [3 3]}
+             (thd/insert-new-text-character position text character)))))
+
+  (testing "should insert new line character on a pressing an enter when selection in multiple line"
+    (let [text [{:text "abcdef"} {:text "ghijkl"}]
+          position {:start-line 0 :start 3 :end-line 1 :end 3}
+          character "Enter"]
+      (is (= {:text [{:text "abc"} {:text "jkl"}]
+              :position {:start-line 1 :start 0 :end-line 1 :end 0}
+              :line-lengths [3 3]}
+             (thd/insert-new-text-character position text character)))))
+
+  (testing "should insert new line when nil and enter is pressed"
+    (let [text nil
+          position nil
+          character "Enter"]
+      (is (= {:text [{:text ""}]
+              :position {:start-line 0 :start 0 :end-line 0 :end 0}
+              :line-lengths [0]}
+             (thd/insert-new-text-character position text character))))))

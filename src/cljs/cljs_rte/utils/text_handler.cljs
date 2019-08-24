@@ -9,6 +9,9 @@
 (defmethod update-line-text-conditionally :default [text position current character]
   [{:text character}])
 
+(defmethod update-line-text-conditionally [:new-box "Enter"] [text position current character]
+  [{:text ""}])
+
 (defmethod update-line-text-conditionally [:equal-start-end-current :default] [text position current character]
   (update-in text [current :text]
              (fn [line-text]
@@ -20,12 +23,29 @@
                                          (subs line-text end-position))]
                  (when-not (empty? new-text-value) new-text-value)))))
 
+(defmethod update-line-text-conditionally [:equal-start-end-current "Enter"] [text position current character]
+  (let [start-position (or (:start position) 0)
+        end-position (or (:end position) 0)
+        line-text (or (get-in text [current :text]) "")
+        this-line-text (subs line-text 0 start-position)
+        next-line-text (subs line-text end-position)
+        full-text (update-in text [current :text]
+                             (constantly this-line-text))]
+    (assoc full-text (inc current) {:text next-line-text})))
+
 (defmethod update-line-text-conditionally [:equal-start-current :default] [text position current character]
   (update-in text [current :text]
              (fn [line-text]
                (let [start-position (or (:start position) 0)
                      new-text-value (str (subs line-text 0 start-position)
                                          character)]
+                 (when-not (empty? new-text-value) new-text-value)))))
+
+(defmethod update-line-text-conditionally [:equal-start-current "Enter"] [text position current character]
+  (update-in text [current :text]
+             (fn [line-text]
+               (let [start-position (or (:start position) 0)
+                     new-text-value (subs line-text 0 start-position)]
                  (when-not (empty? new-text-value) new-text-value)))))
 
 (defmethod update-line-text-conditionally [:end-gt-current :default] [text position current character]
@@ -40,6 +60,13 @@
         temp-texts (update-in text [current] (constantly nil))]
     (update-in temp-texts [start-line :text] (constantly current-line-new-value))))
 
+(defmethod update-line-text-conditionally [:equal-end-current "Enter"] [text position current character]
+  (update-in text [current :text]
+             (fn [line-text]
+               (let [end-position (or (:end position) 0)
+                     current-line-new-value (subs line-text end-position)]
+                 current-line-new-value))))
+
 (defn insert-new-text-character [position text character]
   (let [start-line (or (:start-line position) 0)
         end-line (or (:end-line position) 0)
@@ -47,7 +74,8 @@
         new-text (reduce
                   (fn [final current]
                     (cond
-                      (= nil text) [{:text character}]
+                      (= nil text)
+                      (update-line-text-conditionally final position current character :new-box)
 
                       (= start-line end-line current)
                       (update-line-text-conditionally final position current character :equal-start-end-current)

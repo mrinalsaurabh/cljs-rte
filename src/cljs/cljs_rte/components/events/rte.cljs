@@ -34,11 +34,12 @@
  (fn [db [_ content]]
    (cond
      (= content "Shift") (assoc-in db [:rte :shift-pressed] false)
-     (= (count content) 1) (let [position (get-in db [:rte :cursor-position])
-                                 text (get-in db [:rte :rte-content])
-                                 new-text-positions (text-handler/insert-new-text-character position text content)]
-                             (-> db
-                                 (assoc-in [:rte :rte-content] (:text new-text-positions))
-                                 (assoc-in [:rte :cursor-position] (:position new-text-positions))
-                                 (assoc-in [:rte :line-lengths] (:line-lengths new-text-positions))))
+     (or (= (count content) 1) (some #{content} ["Enter"]))
+     (let [position (get-in db [:rte :cursor-position])
+           text (get-in db [:rte :rte-content])
+           new-text-positions (text-handler/insert-new-text-character position text content)]
+       (-> db
+           (assoc-in [:rte :rte-content] (:text new-text-positions))
+           (assoc-in [:rte :cursor-position] (:position new-text-positions))
+           (assoc-in [:rte :line-lengths] (:line-lengths new-text-positions))))
      :else db)))
