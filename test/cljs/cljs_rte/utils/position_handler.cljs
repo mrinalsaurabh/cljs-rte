@@ -44,6 +44,12 @@
     (let [current-position {:start-line 0 :start 3 :end-line 0 :end 5 :inverted true}
           line-lengths [7]]
       (is (= {:start-line 0 :start 2 :end 2 :end-line 0 :inverted true}
+             (pos/update-position-on-left current-position line-lengths false)))))
+
+  (testing "update position when Arrow goes to above line"
+    (let [current-position {:start-line 1 :start 0 :end-line 1 :end 0}
+          line-lengths [7 7]]
+      (is (= {:start-line 0 :start 7 :end 7 :end-line 0}
              (pos/update-position-on-left current-position line-lengths false))))))
 
 (deftest test-update-position-on-right-when-shift-pressed

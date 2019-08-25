@@ -14,8 +14,8 @@
 
 (defmethod update-position-on-write-conditionally "Enter" [position]
   (let [start-line (if (:start-line position) (inc (:start-line position)) 0)
-        position 0]
-    {:start position :start-line start-line :end position :end-line start-line}))
+        cursor-position 0]
+    {:start cursor-position :start-line start-line :end cursor-position :end-line start-line}))
 
 (defmulti update-position-on-right (fn [current-position line-lenghts shift-key-pressed]
                                      [shift-key-pressed (= true (:inverted current-position))]))
@@ -80,7 +80,8 @@
         to-prev-line? (and (< (dec start) 0) (> start-line 0))
         new-start (if to-prev-line? (nth line-lenghts (dec start-line)) (max 0 (dec start)))
         new-start-line (if to-prev-line? (dec start-line) start-line)]
-    (assoc current-position :start new-start :end new-start :start-line new-start-line)))
+    (merge current-position
+           {:end-line new-start-line :start new-start :end new-start :start-line new-start-line})))
 
 (defmethod update-position-on-left :default [current-position line-lenghts]
   (let [end (:end current-position)
