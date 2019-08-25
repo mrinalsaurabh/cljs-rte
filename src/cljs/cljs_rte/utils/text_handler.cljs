@@ -23,6 +23,23 @@
                                          (subs line-text end-position))]
                  (when-not (empty? new-text-value) new-text-value)))))
 
+(defmethod update-line-text-conditionally [:equal-start-end-current "Backspace"] [text position current character]
+  (if (= 0 (:start position) (:end position))
+    (if (= 0 current)
+      text
+      (let [current-line-text (get-in text [current :text])
+            updated-previous-line (update-in text [(dec current) :text]
+                                             (fn [line-text] (str line-text current-line-text)))]
+        (update-in updated-previous-line [current] (constantly nil))))
+    (update-in text [current :text]
+               (fn [line-text]
+                 (let [start-position (or (:start position) 0)
+                       end-position (or (:end position) 0)
+                       new-line-text (if (= start-position end-position)
+                                       (str (subs line-text 0 (dec start-position)) (subs line-text start-position))
+                                       (str (subs line-text 0 start-position) (subs line-text end-position)))]
+                   new-line-text)))))
+
 (defmethod update-line-text-conditionally [:equal-start-end-current "Enter"] [text position current character]
   (let [start-position (or (:start position) 0)
         end-position (or (:end position) 0)
@@ -32,6 +49,14 @@
         full-text (update-in text [current :text]
                              (constantly this-line-text))]
     (assoc full-text (inc current) {:text next-line-text})))
+
+(defmethod update-line-text-conditionally [:equal-start-current "Backspace"] [text position current character]
+  (let [start-position (:start position)
+        end-line (:end-line position)
+        end (:end position)
+        text-to-be-appended (subs (get-in text [end-line :text]) end)]
+    (update-in text [current :text]
+               (fn [line-text] (str (subs line-text 0 start-position) text-to-be-appended)))))
 
 (defmethod update-line-text-conditionally [:equal-start-current :default] [text position current character]
   (update-in text [current :text]
@@ -48,7 +73,20 @@
                      new-text-value (subs line-text 0 start-position)]
                  (when-not (empty? new-text-value) new-text-value)))))
 
+(defmethod update-line-text-conditionally [:end-gt-current "Backspace"] [text position current character]
+  (update-in text [current :text] (constantly nil)))
+
 (defmethod update-line-text-conditionally [:end-gt-current :default] [text position current character]
+  (update-in text [current :text] (constantly nil)))
+
+(defmethod update-line-text-conditionally [:equal-end-current "Enter"] [text position current character]
+  (update-in text [current :text]
+             (fn [line-text]
+               (let [end-position (or (:end position) 0)
+                     current-line-new-value (subs line-text end-position)]
+                 current-line-new-value))))
+
+(defmethod update-line-text-conditionally [:equal-end-current "Backspace"] [text position current character]
   (update-in text [current :text] (constantly nil)))
 
 (defmethod update-line-text-conditionally [:equal-end-current :default] [text position current character]
@@ -60,17 +98,11 @@
         temp-texts (update-in text [current] (constantly nil))]
     (update-in temp-texts [start-line :text] (constantly current-line-new-value))))
 
-(defmethod update-line-text-conditionally [:equal-end-current "Enter"] [text position current character]
-  (update-in text [current :text]
-             (fn [line-text]
-               (let [end-position (or (:end position) 0)
-                     current-line-new-value (subs line-text end-position)]
-                 current-line-new-value))))
-
 (defn insert-new-text-character [position text character]
   (let [start-line (or (:start-line position) 0)
         end-line (or (:end-line position) 0)
         affected-lines (range start-line (inc end-line))
+        line-lengths (map #(count (:text %)) text)
         new-text (reduce
                   (fn [final current]
                     (cond
@@ -89,7 +121,8 @@
                       :else
                       (update-line-text-conditionally final position current character :equal-end-current)))
                   text affected-lines)
-        filtered-new-text (remove #(nil? (:text %)) new-text)]
+        filtered-new-text (remove #(nil? (:text %)) new-text)
+        new-line-lengths (map #(count (:text %)) filtered-new-text)]
     {:text (vec filtered-new-text)
-     :position (ph/update-position-on-write-conditionally position character)
-     :line-lengths (map #(count (:text %)) filtered-new-text)}))
+     :position (ph/update-position-on-write-conditionally position line-lengths character)
+     :line-lengths new-line-lengths}))

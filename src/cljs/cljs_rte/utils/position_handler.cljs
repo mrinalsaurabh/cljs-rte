@@ -1,6 +1,6 @@
 (ns cljs-rte.utils.position-handler)
 
-(defmulti update-position-on-write-conditionally (fn [position character]
+(defmulti update-position-on-write-conditionally (fn [position line-lengths character]
                                                    (some #{character} ["Backspace" "Enter"])))
 
 (defmethod update-position-on-write-conditionally :default [position]
@@ -16,6 +16,23 @@
   (let [start-line (if (:start-line position) (inc (:start-line position)) 0)
         cursor-position 0]
     {:start cursor-position :start-line start-line :end cursor-position :end-line start-line}))
+
+(defmethod update-position-on-write-conditionally "Backspace" [position line-lengths]
+  (let [start-line (or (:start-line position) 0)
+        start (or (:start position) 0)
+        end-line (or (:end-line position) 0)
+        end (or (:end position) 0)]
+        (cond
+          (and (= 0 start end start-line end-line))
+          position
+          (and (= start end 0) (= start-line end-line))
+          (let [new-line (max (dec start-line) 0)
+                new-start (nth line-lengths new-line)]
+            {:start new-start :start-line new-line :end new-start :end-line new-line})
+          (and (= start end) (= start-line end-line))
+          (let [new-start (dec start)]
+            {:start new-start :start-line start-line :end new-start :end-line start-line})
+          :else (merge position {:end start :end-line start-line}))))
 
 (defmulti update-position-on-right (fn [current-position line-lenghts shift-key-pressed]
                                      [shift-key-pressed (= true (:inverted current-position))]))

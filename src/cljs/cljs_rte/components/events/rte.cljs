@@ -34,7 +34,7 @@
  (fn [db [_ content]]
    (cond
      (= content "Shift") (assoc-in db [:rte :shift-pressed] false)
-     (or (= (count content) 1) (some #{content} ["Enter"]))
+     (or (= (count content) 1) (some #{content} ["Enter" "Backspace"]))
      (let [position (get-in db [:rte :cursor-position])
            text (get-in db [:rte :rte-content])
            new-text-positions (text-handler/insert-new-text-character position text content)]

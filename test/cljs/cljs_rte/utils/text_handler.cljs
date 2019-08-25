@@ -93,3 +93,58 @@
               :position {:start-line 0 :start 0 :end-line 0 :end 0}
               :line-lengths [0]}
              (thd/insert-new-text-character position text character))))))
+
+(deftest test-insert-new-backspace-character
+  (testing "should erase the letter before when not a multi select"
+    (let [text [{:text "abcdef"}]
+          position {:start-line 0 :start 3 :end-line 0 :end 3}
+          character "Backspace"]
+      (is (= {:text [{:text "abdef"}]
+              :position {:start-line 0 :start 2 :end-line 0 :end 2}
+              :line-lengths [5]}
+             (thd/insert-new-text-character position text character)))))
+
+  (testing "should go to previous line when not a multi select"
+    (let [text [{:text "abc"} {:text "def"}]
+          position {:start-line 1 :start 0 :end-line 1 :end 0}
+          character "Backspace"]
+      (is (= {:text [{:text "abcdef"}]
+              :position {:start-line 0 :start 3 :end-line 0 :end 3}
+              :line-lengths [6]}
+             (thd/insert-new-text-character position text character)))))
+
+  (testing "should hold position at the first charater"
+    (let [text [{:text "abc"} {:text "def"}]
+          position {:start-line 0 :start 0 :end-line 0 :end 0}
+          character "Backspace"]
+      (is (= {:text [{:text "abc"} {:text "def"}]
+              :position {:start-line 0 :start 0 :end-line 0 :end 0}
+              :line-lengths [3 3]}
+             (thd/insert-new-text-character position text character)))))
+
+  (testing "should be correct for the last character"
+    (let [text [{:text "abc"} {:text "def"}]
+          position {:start-line 1 :start 3 :end-line 1 :end 3}
+          character "Backspace"]
+      (is (= {:text [{:text "abc"} {:text "de"}]
+              :position {:start-line 1 :start 2 :end-line 1 :end 2}
+              :line-lengths [3 2]}
+             (thd/insert-new-text-character position text character)))))
+
+  (testing "should devour character when multi selected within a line"
+    (let [text [{:text "abcdef"}]
+          position {:start-line 0 :start 3 :end-line 0 :end 5}
+          character "Backspace"]
+      (is (= {:text [{:text "abcf"}]
+              :position {:start-line 0 :start 3 :end-line 0 :end 3}
+              :line-lengths [4]}
+             (thd/insert-new-text-character position text character)))))
+
+  (testing "should devour character when multi selected across lines"
+    (let [text [{:text "abc"} {:text "def"} {:text "ghi"}]
+          position {:start-line 0 :start 2 :end-line 2 :end 2}
+          character "Backspace"]
+      (is (= {:text [{:text "abi"}]
+              :position {:start-line 0 :start 2 :end-line 0 :end 2}
+              :line-lengths [3]}
+             (thd/insert-new-text-character position text character))))))
