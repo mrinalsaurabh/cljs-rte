@@ -1,8 +1,7 @@
 (ns cljs-rte.utils.html-creator
   (:require [clojure.string :as str]))
 
-(defn text-to-html [text position]
-  (letfn [(span-position [line text position]
+(defn span-position [line text position]
             (let [start-line (:start-line position)
                   start-position (:start position)
                   end-line (:end-line position)
@@ -25,10 +24,33 @@
                      (subs text 0 end-position)
                      "</span>"
                      (subs text end-position))
-                :else  text)))]
-    (let [selected-lines (range (or (:start-line position) 0)
-                                (inc (or (:end-line position) 0)))]
-      (apply str (map-indexed (fn [idx curr]
-                                (if (some #{idx} selected-lines)
-                                  (str "<p>" (span-position idx (:text curr) position) "</p>")
-                                  (str "<p>" (:text curr) "</p>"))) text)))))
+                :else  text)))
+
+(defmulti current-tag-renderer (fn [index position selected? current-content]
+                                 (cond
+                                   (not (nil? (:image current-content))) :image
+                                   :else :text)))
+
+(defmethod current-tag-renderer :image [index position selected? current-content]
+  (if selected?
+    (str "<p>"
+         "<span class='selected'>"
+         "<img src='" (:image current-content) "' alt='" (:caption current-content) "'>"
+         "</span>"
+         "</p>")
+    (str "<p>"
+         "<img src='" (:image current-content) "' alt='" (:caption current-content) "'>"
+         "</p>")))
+
+(defmethod current-tag-renderer :text [index position selected? current-content]
+  (if selected?
+    (str "<p>" (span-position index (:text current-content) position) "</p>")
+    (str "<p>" (:text current-content) "</p>")))
+
+(defn text-to-html [text position]
+  (let [selected-lines (range (or (:start-line position) 0)
+                              (inc (or (:end-line position) 0)))]
+    (apply str (map-indexed (fn [idx curr]
+                              (if (some #{idx} selected-lines)
+                                (current-tag-renderer idx position true curr)
+                                (current-tag-renderer idx position false curr))) text))))

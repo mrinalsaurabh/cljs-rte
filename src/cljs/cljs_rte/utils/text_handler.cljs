@@ -76,6 +76,9 @@
 (defmethod update-line-text-conditionally [:end-gt-current "Backspace"] [text position current character]
   (update-in text [current :text] (constantly nil)))
 
+(defmethod update-line-text-conditionally [:end-gt-current "Enter"] [text position current character]
+  (update-in text [current :text] (constantly nil)))
+
 (defmethod update-line-text-conditionally [:end-gt-current :default] [text position current character]
   (update-in text [current :text] (constantly nil)))
 

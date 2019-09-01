@@ -5,6 +5,7 @@
             [cljs-rte.test.utils.date]
             [cljs-rte.test.unit.rte-box.events]
             [cljs-rte.test.utils.html-creator]
+            [cljs-rte.test.utils.image-video-handler]
             [cljs-rte.test.utils.position-handler]
             [cljs-rte.test.utils.text-handler]))
 
@@ -13,5 +14,6 @@
 (test/run-tests 'cljs-rte.test.unit.rte-box.events
                 'cljs-rte.test.utils.date
                 'cljs-rte.test.utils.html-creator
+                'cljs-rte.test.utils.image-video-handler
                 'cljs-rte.test.utils.position-handler
                 'cljs-rte.test.utils.text-handler)

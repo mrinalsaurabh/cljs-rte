@@ -77,10 +77,10 @@
              (thd/insert-new-text-character position text character)))))
 
   (testing "should insert new line character on a pressing an enter when selection in multiple line"
-    (let [text [{:text "abcdef"} {:text "ghijkl"}]
-          position {:start-line 0 :start 3 :end-line 1 :end 3}
+    (let [text [{:text "abcdef"} {:text "ghijkl"} {:text "mnoprq"}]
+          position {:start-line 0 :start 3 :end-line 2 :end 3}
           character "Enter"]
-      (is (= {:text [{:text "abc"} {:text "jkl"}]
+      (is (= {:text [{:text "abc"} {:text "prq"}]
               :position {:start-line 1 :start 0 :end-line 1 :end 0}
               :line-lengths [3 3]}
              (thd/insert-new-text-character position text character)))))

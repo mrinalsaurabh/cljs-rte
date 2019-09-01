@@ -4,6 +4,7 @@
             [clojure.string :as str]
             [cljs-rte.utils.text-handler :as text-handler]
             [cljs-rte.utils.position-handler :as position-handler]
+            [cljs-rte.utils.image-video-handler :as image-video-handler]
             [ajax.core :as ajax]))
 
 (reg-event-db
@@ -43,3 +44,14 @@
            (assoc-in [:rte :cursor-position] (:position new-text-positions))
            (assoc-in [:rte :line-lengths] (:line-lengths new-text-positions))))
      :else db)))
+
+(reg-event-db
+ :rte-insert-image
+ (fn [db [_ img-src img-caption]]
+     (let [position (get-in db [:rte :cursor-position])
+           text (get-in db [:rte :rte-content])
+           new-text-positions (image-video-handler/insert-image text position img-src img-caption)]
+       (-> db
+           (assoc-in [:rte :rte-content] (:text new-text-positions))
+           (assoc-in [:rte :cursor-position] (:position new-text-positions))
+           (assoc-in [:rte :line-lengths] (:line-lengths new-text-positions))))))

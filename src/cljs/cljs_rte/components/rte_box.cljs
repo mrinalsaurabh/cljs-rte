@@ -16,7 +16,12 @@
     [:div {:class "editor"}
      [:div {:class "font-panel"}
       [:input {:type "button" :class "text-bold" :value "B"}]
-      [:input {:type "button" :class "text-italics" :value "I"}]]
+      [:input {:type "button" :class "text-italics" :value "I"}]
+      [:input {:type "button"
+               :class "insert-image"
+               :value "In"
+               :on-click (fn [e]
+                           (dispatch [:rte-insert-image "/images/beautiful-blur-bright-326055.jpg" "image--"]))}]]
      [:div {:id rand-id
             :class "display-panel"
             :contentEditable "true"
