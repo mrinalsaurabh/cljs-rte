@@ -31,14 +31,14 @@
 
 (defmethod current-tag-renderer :image [index position selected? current-content]
   (if selected?
-    (str "<p>"
-         "<span class='selected'>"
+    (str "<figure class='selected'>"
          "<img src='" (:image current-content) "' alt='" (:caption current-content) "' width=''>"
-         "</span>"
-         "</p>")
-    (str "<p>"
+         "<figcaption>" (:caption current-content) "</figcaption>"
+         "</figure>")
+    (str "<figure>"
          "<img src='" (:image current-content) "' alt='" (:caption current-content) "' width=''>"
-         "</p>")))
+         "<figcaption>" (:caption current-content) "</figcaption>"
+         "</figure>")))
 
 (defmethod current-tag-renderer :text [index position selected? current-content]
   (if selected?
