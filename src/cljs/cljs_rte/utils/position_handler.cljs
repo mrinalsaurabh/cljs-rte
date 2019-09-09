@@ -1,7 +1,8 @@
 (ns cljs-rte.utils.position-handler)
 
-(defmulti update-position-on-write-conditionally (fn [position line-lengths character]
-                                                   (some #{character} ["Backspace" "Enter"])))
+(defmulti update-position-on-write-conditionally (fn [position line-lengths character line-type]
+                                                   (let [parameter (or (some #{character} ["Backspace" "Enter"]) :default)]
+                                                     (if-not line-type parameter [parameter line-type]))))
 
 (defmethod update-position-on-write-conditionally :default [position]
   (let [start-line (or (:start-line position) 0)
@@ -11,6 +12,19 @@
      :start-line start-line
      :end new-start-position
      :end-line start-line}))
+
+(defmethod update-position-on-write-conditionally [:default :image]  [position]
+  (let [start-line (or (:start-line position) 0)
+        start-position (or (:start position) 0)
+        new-start-position (inc start-position)
+        new-line (inc start-line)]
+    {:start new-start-position
+     :start-line new-line
+     :end new-start-position
+     :end-line new-line}))
+
+(defmethod update-position-on-write-conditionally ["Backspace" :image]  [position line-lengths]
+  (update-position-on-write-conditionally position line-lengths "Backspace" nil))
 
 (defmethod update-position-on-write-conditionally "Enter" [position]
   (let [start-line (if (:start-line position) (inc (:start-line position)) 0)
@@ -22,17 +36,17 @@
         start (or (:start position) 0)
         end-line (or (:end-line position) 0)
         end (or (:end position) 0)]
-        (cond
-          (and (= 0 start end start-line end-line))
-          position
-          (and (= start end 0) (= start-line end-line))
-          (let [new-line (max (dec start-line) 0)
-                new-start (nth line-lengths new-line)]
-            {:start new-start :start-line new-line :end new-start :end-line new-line})
-          (and (= start end) (= start-line end-line))
-          (let [new-start (dec start)]
-            {:start new-start :start-line start-line :end new-start :end-line start-line})
-          :else (merge position {:end start :end-line start-line}))))
+    (cond
+      (and (= 0 start end start-line end-line))
+      position
+      (and (= start end 0) (= start-line end-line))
+      (let [new-line (max (dec start-line) 0)
+            new-start (nth line-lengths new-line)]
+        {:start new-start :start-line new-line :end new-start :end-line new-line})
+      (and (= start end) (= start-line end-line))
+      (let [new-start (dec start)]
+        {:start new-start :start-line start-line :end new-start :end-line start-line})
+      :else (merge position {:end start :end-line start-line}))))
 
 (defmulti update-position-on-right (fn [current-position line-lenghts shift-key-pressed]
                                      [shift-key-pressed (= true (:inverted current-position))]))

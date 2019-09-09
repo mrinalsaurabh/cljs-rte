@@ -35,3 +35,10 @@
                   "<p><span class='selected'></span>def</p>")
              (html-creator/text-to-html text position))))))
 
+(deftest test-image-to-html
+  (testing "should render image with img tag"
+    (let [content [{:image "images/image-1.jpg" :alt "test-image"  :type :image}]
+          position {:start-line 0 :start 0 :end-line 0 :end 0}]
+      (is (= "<p><span class='selected'><img src='images/image-1.jpg' alt='' width=''></span></p>"
+             (html-creator/text-to-html content position))))))
+

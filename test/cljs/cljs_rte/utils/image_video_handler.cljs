@@ -8,7 +8,9 @@
           position {:start-line 0 :start 3 :end-line 0 :end 3}
           image-path "some/src"
           caption "some-caption"]
-      (is (= {:text [{:text "abc"} {:image image-path :caption caption :text ""} {:text "def"}]
+      (is (= {:text [{:text "abc"}
+                     {:image image-path :caption caption :text "" :type :image}
+                     {:text "def"}]
               :position {:start-line 2 :start 0 :end-line 2 :end 0}
               :line-lengths [3 0 3]}
              (ivhd/insert-image text position image-path caption)))))
@@ -18,7 +20,7 @@
           position {:start-line 0 :start 3 :end-line 2 :end 3}
           image-path "some/src"
           caption "some-caption"]
-      (is (= {:text [{:text "abc"} {:image image-path :caption caption :text ""} {:text "prq"}]
+      (is (= {:text [{:text "abc"} {:image image-path :caption caption :text ""  :type :image} {:text "prq"}]
               :position {:start-line 2 :start 0 :end-line 2 :end 0}
               :line-lengths [3 0 3]}
              (ivhd/insert-image text position image-path caption)))))
@@ -28,7 +30,7 @@
           position nil
           image-path "some/src"
           caption "some-caption"]
-      (is (= {:text [{:image image-path :caption caption :text ""}]
+      (is (= {:text [{:image image-path :caption caption :text ""  :type :image}]
               :position {:start-line 1 :start 0 :end-line 1 :end 0}
               :line-lengths [0]}
              (ivhd/insert-image text position image-path caption))))))

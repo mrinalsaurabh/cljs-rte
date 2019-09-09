@@ -64,6 +64,15 @@
       (is (= {:text [{:text "i"}]
               :position {:start-line 0 :start 1 :end-line 0 :end 1}
               :line-lengths [1]}
+             (thd/insert-new-text-character position text character)))))
+
+  (testing "should insert one character on a different line when not a text"
+    (let [text [{:image "some" :type :image :text ""}]
+          position {:start-line 0 :start 0 :end-line 0 :end 0}
+          character "i"]
+      (is (= {:text [{:image "some" :type :image :text ""} {:text "i"}]
+              :position {:start-line 1 :start 1 :end-line 1 :end 1}
+              :line-lengths [0 1]}
              (thd/insert-new-text-character position text character))))))
 
 (deftest test-insert-new-enter-character
@@ -140,11 +149,11 @@
               :line-lengths [4]}
              (thd/insert-new-text-character position text character)))))
 
-  (testing "should devour character when multi selected across lines"
-    (let [text [{:text "abc"} {:text "def"} {:text "ghi"}]
-          position {:start-line 0 :start 2 :end-line 2 :end 2}
+  (testing "should delete first image"
+    (let [text [{:image "abc" :text "" :type :image}]
+          position {:start-line 0 :start 1 :end-line 0 :end 1}
           character "Backspace"]
-      (is (= {:text [{:text "abi"}]
-              :position {:start-line 0 :start 2 :end-line 0 :end 2}
-              :line-lengths [3]}
+      (is (= {:text [{:text ""}]
+              :position {:start-line 0 :start 0 :end-line 0 :end 0}
+              :line-lengths [0]}
              (thd/insert-new-text-character position text character))))))

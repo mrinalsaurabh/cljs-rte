@@ -2,9 +2,10 @@
   (:require [clojure.string :as str]
             [cljs-rte.utils.position-handler :as ph]))
 
-(defmulti update-line-text-conditionally (fn [text position current character condition]
-                                           [condition
-                                            (or (some #{character} ["Backspace" "Enter"]) :default)]))
+(defmulti update-line-text-conditionally
+  (fn [text position current character condition]
+    [condition
+     (or (some #{character} ["Backspace" "Enter"]) :default)]))
 
 (defmethod update-line-text-conditionally :default [text position current character]
   [{:text character}])
@@ -13,32 +14,42 @@
   [{:text ""}])
 
 (defmethod update-line-text-conditionally [:equal-start-end-current :default] [text position current character]
-  (update-in text [current :text]
-             (fn [line-text]
-               (let [start-position (or (:start position) 0)
-                     end-position (or (:end position) 0)
-                     line-text (or line-text "")
-                     new-text-value (str (subs line-text 0 start-position)
-                                         character
-                                         (subs line-text end-position))]
-                 (when-not (empty? new-text-value) new-text-value)))))
+  (cond (= :image (get-in text [current :type]))
+        (let [next-line (inc current)
+              next-line-text (get-in text [next-line])
+              new-text (if-not (:type next-line-text)
+                         (assoc text next-line {:text character})
+                         (assoc-in text [next-line :text] (str character (:text next-line-text))))]
+          new-text)
+        :else (update-in text [current :text]
+                         (fn [line-text]
+                           (let [start-position (or (:start position) 0)
+                                 end-position (or (:end position) 0)
+                                 line-text (or line-text "")
+                                 new-text-value (str (subs line-text 0 start-position)
+                                                     character
+                                                     (subs line-text end-position))]
+                             (when-not (empty? new-text-value) new-text-value))))))
 
 (defmethod update-line-text-conditionally [:equal-start-end-current "Backspace"] [text position current character]
-  (if (= 0 (:start position) (:end position))
-    (if (= 0 current)
-      text
-      (let [current-line-text (get-in text [current :text])
-            updated-previous-line (update-in text [(dec current) :text]
-                                             (fn [line-text] (str line-text current-line-text)))]
-        (update-in updated-previous-line [current] (constantly nil))))
-    (update-in text [current :text]
-               (fn [line-text]
-                 (let [start-position (or (:start position) 0)
-                       end-position (or (:end position) 0)
-                       new-line-text (if (= start-position end-position)
-                                       (str (subs line-text 0 (dec start-position)) (subs line-text start-position))
-                                       (str (subs line-text 0 start-position) (subs line-text end-position)))]
-                   new-line-text)))))
+  (cond (= :image (get-in text [current :type]))
+        (update-in text [current] (constantly {:text ""}))
+        (= 0 (:start position) (:end position))
+        (if (= 0 current)
+          text
+          (let [current-line-text (get-in text [current :text])
+                updated-previous-line (update-in text [(dec current) :text]
+                                                 (fn [line-text] (str line-text current-line-text)))]
+            (update-in updated-previous-line [current] (constantly nil))))
+        :else
+        (update-in text [current :text]
+                   (fn [line-text]
+                     (let [start-position (or (:start position) 0)
+                           end-position (or (:end position) 0)
+                           new-line-text (if (= start-position end-position)
+                                           (str (subs line-text 0 (dec start-position)) (subs line-text start-position))
+                                           (str (subs line-text 0 start-position) (subs line-text end-position)))]
+                       new-line-text)))))
 
 (defmethod update-line-text-conditionally [:equal-start-end-current "Enter"] [text position current character]
   (let [start-position (or (:start position) 0)
@@ -125,7 +136,9 @@
                       (update-line-text-conditionally final position current character :equal-end-current)))
                   text affected-lines)
         filtered-new-text (remove #(nil? (:text %)) new-text)
-        new-line-lengths (map #(count (:text %)) filtered-new-text)]
+        new-line-lengths (map #(count (:text %)) filtered-new-text)
+        current-line-type (get-in text [(:start-line position) :type])
+        new-position (ph/update-position-on-write-conditionally position line-lengths character current-line-type)]
     {:text (vec filtered-new-text)
-     :position (ph/update-position-on-write-conditionally position line-lengths character)
+     :position new-position
      :line-lengths new-line-lengths}))

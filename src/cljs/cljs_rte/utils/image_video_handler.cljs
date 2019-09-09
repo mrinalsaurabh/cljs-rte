@@ -4,7 +4,7 @@
 
 (defn insert-image [text position image-path caption]
   (let [new-reality (thd/insert-new-text-character position text "Enter")
-        image-element {:image image-path :caption caption :text ""}
+        image-element {:image image-path :caption caption :text "" :type :image}
         new-text (:text new-reality)
         new-position (:position new-reality)
         current-line (:start-line new-position)

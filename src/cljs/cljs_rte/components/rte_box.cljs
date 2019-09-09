@@ -21,7 +21,7 @@
                :class "insert-image"
                :value "In"
                :on-click (fn [e]
-                           (dispatch [:rte-insert-image "/images/beautiful-blur-bright-326055.jpg" "image--"]))}]]
+                           (dispatch [:rte-insert-image "/images/architecture-buildings-city.jpg" "image--"]))}]]
      [:div {:id rand-id
             :class "display-panel"
             :contentEditable "true"
