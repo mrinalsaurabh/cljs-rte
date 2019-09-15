@@ -4,7 +4,7 @@
             [cljsjs.d3]
             [cljs-rte.events]
             [cljs-rte.subs]
-            [utils.string :as util-string]
+            [cljs-rte.utils.string :as util-string]
             [cljs-rte.components.events.rte]
             [cljs-rte.components.subs.rte]
             [re-frame.core :refer [dispatch subscribe]]))
