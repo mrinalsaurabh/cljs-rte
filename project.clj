@@ -12,6 +12,7 @@
                  [cljsjs/d3 "4.3.0-5"]
                  [reagent "0.6.0"]
                  [reagent-utils "0.2.0"]
+                 [hiccups "0.3.0"]
                  [re-frame "0.9.4"]
                  [re-com "2.0.0"]
                  [secretary "1.2.3"]
